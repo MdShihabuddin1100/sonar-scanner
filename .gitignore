@@ -1,0 +1,3 @@
+maven-scanner/java-8-openjdk-amd64/*
+maven-scanner/java-11-openjdk-amd64/*
+maven-scanner/java-21-openjdk-amd64/*
