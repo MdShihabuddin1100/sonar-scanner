@@ -1,13 +1,27 @@
 #!/bin/bash
+set -x
+
 # Define API endpoint URL
 API_URL="http://aescontroller-sonarqube-sonarqube.core-ns:9000/sonarqube/api/ce/component?component=${SONAR_PROJECT_KEY}&branch=${GIT_BRANCH}"
+
 # Polling interval in seconds
 interval=10
 TARGET_DURATION=3600
 
+echo "Polling API at ${API_URL}"
+echo "SONAR_PROJECT_KEY: ${SONAR_PROJECT_KEY}"
+echo "GIT_BRANCH: ${GIT_BRANCH}"
+echo "Polling interval: ${interval} seconds"
+
 while true; do
-    # Make a GET request to the API endpoint
-    response=$(curl -u "${SONAR_TOKEN}": "${API_URL}")
+    # Make a GET request to the API endpoint with verbose output
+    response=$(curl -v -u "${SONAR_TOKEN}": "${API_URL}")
+
+    # Check for errors in the curl command
+    if [ $? -ne 0 ]; then
+        echo "Error occurred while executing curl."
+        exit 1
+    fi
 
     # Parse the JSON response to extract the status from the 'current' object
     current_status=$(echo $response | jq -r '.current.status')
@@ -18,7 +32,6 @@ while true; do
         break
     fi
 
-    # Check if there's a 'current' status
     if [[ ! -z "$current_status" ]]; then
         echo "Current status is: $current_status"
     fi
@@ -31,5 +44,3 @@ while true; do
     # Wait for the defined interval before polling again
     sleep $interval
 done
-
-# echo "Polling completed."
