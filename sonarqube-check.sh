@@ -13,9 +13,11 @@ echo "SONAR_PROJECT_KEY: ${SONAR_PROJECT_KEY}"
 echo "GIT_BRANCH: ${GIT_BRANCH}"
 echo "Polling interval: ${interval} seconds"
 
+start_time=$(date +%s)  # Initialize the start time
+
 while true; do
-    # Make a GET request to the API endpoint with verbose output
-    response=$(curl -v -u "${SONAR_TOKEN}": "${API_URL}")
+    # Make a GET request to the API endpoint
+    response=$(curl -u "${SONAR_TOKEN}": "${API_URL}")
 
     # Check for errors in the curl command
     if [ $? -ne 0 ]; then
@@ -30,14 +32,19 @@ while true; do
     if [[ ! -z "$current_status" ]] && [[ "$current_status" == "SUCCESS" || "$current_status" == "FAILED" ]]; then
         echo "Current status: $current_status"
         break
+    else
+        # if [[ ! -z "$current_status" ]]; then
+        #     echo "Current status is: $current_status"
+        # else
+        #     echo "No status found in response."
+        # fi
+        break
     fi
 
-    if [[ ! -z "$current_status" ]]; then
-        echo "Current status is: $current_status"
-    fi
-
-    if [ "$SECONDS" -ge "$TARGET_DURATION" ]; then
-        echo "2 hours have passed. Terminating..."
+    # Calculate elapsed time
+    elapsed_time=$(($(date +%s) - start_time))
+    if [ "$elapsed_time" -ge "$TARGET_DURATION" ]; then
+        echo "Time over, terminating..."
         break
     fi
 

@@ -13,6 +13,7 @@ echo "Polling API at ${API_URL}"
 echo "SONAR_PROJECT_KEY: ${SONAR_PROJECT_KEY}"
 echo "GIT_BRANCH: ${GIT_BRANCH}"
 echo "Polling interval: ${interval} seconds"
+start_time=$(date +%s)  # Initialize the start time
 
 while true; do
     # Make a GET request to the API endpoint with verbose output
@@ -37,7 +38,8 @@ while true; do
         echo "Current status is: $current_status"
     fi
 
-    if [ "$SECONDS" -ge "$TARGET_DURATION" ]; then
+    elapsed_time=$(($(date +%s) - start_time))
+    if [ "$elapsed_time" -ge "$TARGET_DURATION" ]; then
         echo "2 hours have passed. Terminating..."
         break
     fi
