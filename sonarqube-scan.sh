@@ -17,7 +17,7 @@ start_time=$(date +%s)  # Initialize the start time
 
 while true; do
     # Make a GET request to the API endpoint with verbose output
-    response=$(curl -v -u "${SONAR_TOKEN}": "${API_URL}")
+    response=$(curl -u "${SONAR_TOKEN}": "${API_URL}")
 
     # Check for errors in the curl command
     if [ $? -ne 0 ]; then
@@ -28,7 +28,7 @@ while true; do
     # Parse the JSON response to extract the status from the 'current' object
     current_status=$(echo $response | jq -r '.current.status')
 
-    # Check if there's a 'current' status and if it's success or failed
+    Check if there's a 'current' status and if it's success or failed
     if [[ ! -z "$current_status" ]] && [[ "$current_status" == "SUCCESS" || "$current_status" == "FAILED" ]]; then
         echo "Current status: $current_status"
         break
@@ -39,6 +39,7 @@ while true; do
     fi
 
     elapsed_time=$(($(date +%s) - start_time))
+    echo "elapsed time is $elapsed_time"
     if [ "$elapsed_time" -ge "$TARGET_DURATION" ]; then
         echo "2 hours have passed. Terminating..."
         break
