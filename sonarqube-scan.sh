@@ -4,7 +4,7 @@ SONAR_PROJECT_KEY="code"
 GIT_BRANCH="main"
 # Define API endpoint URL
 API_URL="http://172.18.255.200/sonarqube/api/ce/component?component=${SONAR_PROJECT_KEY}&branch=${GIT_BRANCH}"
-SONAR_TOKEN="squ_83ad5e8e3ee77f40a203933cea2a8aa9d5252654"
+SONAR_TOKEN="squ_cc21cb0c9b6db88074169d5655d0cc7b05ade2e9"
 # Polling interval in seconds
 interval=10
 TARGET_DURATION=3600
@@ -28,7 +28,7 @@ while true; do
     # Parse the JSON response to extract the status from the 'current' object
     current_status=$(echo $response | jq -r '.current.status')
 
-    Check if there's a 'current' status and if it's success or failed
+    # Check if there's a 'current' status and if it's success or failed
     if [[ ! -z "$current_status" ]] && [[ "$current_status" == "SUCCESS" || "$current_status" == "FAILED" ]]; then
         echo "Current status: $current_status"
         break

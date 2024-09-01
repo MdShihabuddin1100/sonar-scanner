@@ -27,8 +27,8 @@ while true; do
 
     # Parse the JSON response to extract the status from the 'current' object
     current_status=$(echo $response | jq -r '.current.status')
-
-    export current_status
+    SCANNER_STATUS=current_status
+    export SCANNER_STATUS
     # Check if there's a 'current' status and if it's success or failed
     if [[ ! -z "$current_status" ]] && [[ "$current_status" == "SUCCESS" || "$current_status" == "FAILED" ]]; then
         echo "Current status: $current_status"
