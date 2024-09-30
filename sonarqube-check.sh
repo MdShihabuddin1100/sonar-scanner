@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+set -e
 
 # Define API endpoint URL
 API_URL="http://aescontroller-sonarqube-sonarqube.core-ns:9000/sonarqube/api/ce/component?component=${SONAR_PROJECT_KEY}&branch=${GIT_BRANCH}"
@@ -27,15 +27,13 @@ while true; do
 
     # Parse the JSON response to extract the status from the 'current' object
     current_status=$(echo $response | jq -r '.current.status')
-    SCANNER_STATUS=current_status
+    SCANNER_STATUS=$current_status
     export SCANNER_STATUS
 
     if [[ ! -z "$current_status" ]]; then 
         if [[ "$current_status" == "SUCCESS" || "$current_status" == "FAILED" ]]; then
             echo "Current status: $current_status"
             break
-        # else
-        #     echo "Current status is not SUCCESS or FAILED: $current_status"
         fi    
     else
         echo "Current status is empty or unset."
@@ -44,7 +42,7 @@ while true; do
 
 
     # Calculate elapsed time
-    elapsed_time=$(($(date +%s) - start_time))
+    elapsed_time=$(( $(date +%s) - start_time ))
     if [ "$elapsed_time" -ge "$TARGET_DURATION" ]; then
         echo "Time over, terminating..."
         break
