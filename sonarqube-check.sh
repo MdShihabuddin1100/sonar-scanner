@@ -30,17 +30,17 @@ while true; do
     SCANNER_STATUS=current_status
     export SCANNER_STATUS
 
-if [[ ! -z "$current_status" ]]; then 
-    if [[ "$current_status" == "SUCCESS" || "$current_status" == "FAILED" ]]; then
-        echo "Current status: $current_status"
+    if [[ ! -z "$current_status" ]]; then 
+        if [[ "$current_status" == "SUCCESS" || "$current_status" == "FAILED" ]]; then
+            echo "Current status: $current_status"
+            break
+        # else
+        #     echo "Current status is not SUCCESS or FAILED: $current_status"
+        fi    
+    else
+        echo "Current status is empty or unset."
         break
-    # else
-    #     echo "Current status is not SUCCESS or FAILED: $current_status"
-    fi    
-else
-    echo "Current status is empty or unset."
-    break
-fi
+    fi
 
 
     # Calculate elapsed time
