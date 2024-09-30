@@ -29,18 +29,19 @@ while true; do
     current_status=$(echo $response | jq -r '.current.status')
     SCANNER_STATUS=current_status
     export SCANNER_STATUS
-    # Check if there's a 'current' status and if it's success or failed
-    if [[ ! -z "$current_status" ]] && [[ "$current_status" == "SUCCESS" || "$current_status" == "FAILED" ]]; then
+
+if [[ ! -z "$current_status" ]]; then 
+    if [[ "$current_status" == "SUCCESS" || "$current_status" == "FAILED" ]]; then
         echo "Current status: $current_status"
         break
-    else
-        # if [[ ! -z "$current_status" ]]; then
-        #     echo "Current status is: $current_status"
-        # else
-        #     echo "No status found in response."
-        # fi
-        break
-    fi
+    # else
+    #     echo "Current status is not SUCCESS or FAILED: $current_status"
+    fi    
+else
+    echo "Current status is empty or unset."
+    break
+fi
+
 
     # Calculate elapsed time
     elapsed_time=$(($(date +%s) - start_time))
