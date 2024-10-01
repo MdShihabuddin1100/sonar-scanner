@@ -1,11 +1,16 @@
 #!/bin/bash
 set -e
 
+SONAR_PROJECT_KEY=code
+SONAR_TOKEN=squ_6acda43ffb0080d0abf21f446ba9a1bfdfe5fe3d
 # Define API endpoint URL
-API_URL="http://aescontroller-sonarqube-sonarqube.core-ns:9000/sonarqube/api/ce/component?component=${SONAR_PROJECT_KEY}&branch=${GIT_BRANCH}"
+# API_URL="http://aescontroller-sonarqube-sonarqube.core-ns:9000/sonarqube/api/ce/component?component=${SONAR_PROJECT_KEY}&branch=${GIT_BRANCH}"
+API_URL="http://172.18.255.200/sonarqube/api/ce/component?component=${SONAR_PROJECT_KEY}"
+
 # Polling interval in seconds
 interval=10
 TARGET_DURATION=3600
+
 echo "Polling API at ${API_URL}"
 echo "SONAR_PROJECT_KEY: ${SONAR_PROJECT_KEY}"
 echo "GIT_BRANCH: ${GIT_BRANCH}"
@@ -31,7 +36,7 @@ while true; do
         echo "Analysis completed successfully."
         break
     elif [[ "$queue_status" == "IN_PROGRESS" ]]; then
-        echo "Queue is in progress"
+        echo "Queue is in progress"but current component succeeded. Waiting...
     else
         echo "Current status: $current_status"
         echo "Queue status: $queue_status"
