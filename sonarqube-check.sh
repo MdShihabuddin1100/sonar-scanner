@@ -13,6 +13,24 @@ echo "Polling interval: ${interval} seconds"
 
 start_time=$(date +%s)  # Initialize the start time
 
+# Function to save or update the queue_status in .bashrc
+save_to_bashrc() {
+    local current_status=$1
+    local BASHRC_FILE="$HOME/.bashrc"
+    local VARIABLE_NAME="SCANNING_STATUS"
+
+    # Check if the variable already exists in .bashrc
+    if grep -q "^export $VARIABLE_NAME=" "$BASHRC_FILE"; then
+        # If found, replace the existing value
+        sed -i "s/^export $VARIABLE_NAME=.*/export $VARIABLE_NAME=\"$current_status\"/" "$BASHRC_FILE"
+    else
+        # If not found, append the new value
+        echo "export $VARIABLE_NAME=\"$current_status\"" >> "$BASHRC_FILE"
+    fi
+
+    echo "Queue status '$current_status' saved to .bashrc."
+}
+
 while true; do
     # Make a GET request to the API endpoint
     response=$(curl -u "${SONAR_TOKEN}": "${API_URL}")
@@ -27,14 +45,15 @@ while true; do
     current_status=$(echo $response | jq -r '.current.status')
     queue_status=$(echo $response | jq -r '.queue[0].status')
 
-    if [[ "$queue_status" != "IN_PROGRESS" && "$current_status" == "SUCCESS" ]]; then
-        echo "Analysis completed successfully."
+    if [[ "$queue_status" != "IN_PROGRESS" ]] && [[ "$current_status" == "SUCCESS" || "$current_status" == "FAILED" ]]; then
+        echo "Found status successfully."
         break
-    elif [[ "$queue_status" == "IN_PROGRESS" ]]; then
+    elif [[ "$queue_status" == "IN_PROGRESS" && "$watch" -lt 1 ]]; then
         echo "Queue is in progress"
-    else
-        echo "Current status: $current_status"
-        echo "Queue status: $queue_status"
+        watch=$((watch + 1))
+    # else
+    #     echo "Current status: $current_status"
+    #     echo "Queue status: $queue_status"
     fi
 
     # Calculate elapsed time
@@ -47,3 +66,5 @@ while true; do
     # Wait for the defined interval before polling again
     sleep $interval
 done
+
+save_to_bashrc "$queue_status" 
