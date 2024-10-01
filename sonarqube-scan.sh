@@ -22,6 +22,10 @@ save_to_bashrc() {
     local BASHRC_FILE="$HOME/.bashrc"
     local VARIABLE_NAME="SCANNING_STATUS"
 
+    if [ ! -f "$BASHRC_FILE" ]; then
+        echo "# .bashrc created by script" > "$BASHRC_FILE"
+    fi
+
     # Check if the variable already exists in .bashrc
     if grep -q "^export $VARIABLE_NAME=" "$BASHRC_FILE"; then
         # If found, replace the existing value
@@ -72,4 +76,4 @@ while true; do
     sleep $interval
 done
 
-save_to_bashrc "$queue_status" 
+save_to_bashrc "$current_status" 
