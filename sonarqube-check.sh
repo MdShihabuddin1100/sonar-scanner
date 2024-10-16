@@ -32,7 +32,7 @@ save_to_bashrc() {
         echo "export $VARIABLE_NAME=\"$current_status\"" >> "$BASHRC_FILE"
     fi
 
-    echo "Queue status '$current_status' saved to '$BASHRC_FILE'."
+    echo "Queue status '$current_status' saved"
 }
 
 while true; do
