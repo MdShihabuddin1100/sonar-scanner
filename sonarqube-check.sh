@@ -16,7 +16,7 @@ start_time=$(date +%s)  # Initialize the start time
 # Function to save or update the queue_status in .bashrc
 save_to_bashrc() {
     local current_status=$1
-    local BASHRC_FILE="$HOME/.bashrc"
+    local BASHRC_FILE="$HOME/.profile"
     local VARIABLE_NAME="SCANNING_STATUS"
 
     if [ ! -f "$BASHRC_FILE" ]; then
@@ -32,7 +32,7 @@ save_to_bashrc() {
         echo "export $VARIABLE_NAME=\"$current_status\"" >> "$BASHRC_FILE"
     fi
 
-    echo "Queue status '$current_status' saved to .bashrc."
+    echo "Queue status '$current_status' saved to '$BASHRC_FILE'."
 }
 
 while true; do
